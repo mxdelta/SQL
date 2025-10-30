@@ -30,6 +30,8 @@ sqlmap -u 'http://10.129.237.210/dashboard.php?search=FERA' --batch --random-age
 
 # MYSQL server
 
+sqlcmd -S SRVMSSQL -U julio -P 'MyPassword!' -y 30 -Y 30
+
 mysql -h 123.123.131.131 -u root -p
 
 mysql -u bolt_dba -p
@@ -69,11 +71,12 @@ mysqldump -u theseus(user) -p Magic(datab)
 
         sqsh -S 10.129.20.13 -U username -P Password123
 
-mssqlclient.py 'reporting:PcwTWTHRwryjc$c6'@10.10.10.125 -db volume -windows-auth
+    mssqlclient.py 'reporting:PcwTWTHRwryjc$c6'@10.10.10.125 -db volume -windows-auth
 
-impacket-mssqlclient ARCHETYPE/sql_svc@10.129.21.3 -windows-auth
+    impacket-mssqlclient ARCHETYPE/sql_svc@10.129.21.3 -windows-auth
 
-impacket-mssqlclient dc1.scrm.local -k (по керберосу)
+    impacket-mssqlclient dc1.scrm.local -k (по керберосу)
+
 ---перед этим 
 
 impacket-getTGT scrm.local/sqlsvc:Pegasus60
