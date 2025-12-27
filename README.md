@@ -165,6 +165,8 @@ exec xp_dirtree 'c:/';
 
         describe wp_users; (описать таблицу)
 
+это интересно!!!                enum_links                 - enum linked servers
+
 # mongodb
 mongo --port 27117 ace --eval "db.admin.find().forEach(printjson);"
 
