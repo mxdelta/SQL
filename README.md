@@ -133,6 +133,10 @@ exec xp_dirtree 'c:/';
 * Проверить залогиненных пользователей
 
   enum_logins                - enum login users
+
+* Проверим, у кого есть роль sysadmin
+
+      SELECT r.name AS role, m.name AS member FROM sys.server_principals r JOIN sys.server_role_members rm ON r.principal_id=rm.role_principal_id JOIN sys.server_principals m ON rm.member_principal_id=m.principal_id WHERE r.name='sysadmin';
   
 * Проверить есть ли пользователи с правами олицетворения
 
