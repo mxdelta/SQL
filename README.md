@@ -112,6 +112,31 @@ export KRB5CCNAME=sqlsvc.ccache
 
 или по TGS - также но с генерацией TGS
 
+* Перечисление входов в систему (сервера) - Проверить залогиненных пользователей
+
+      enum_logins                - enum login users
+      SELECT r.name, r.type_desc, r.is_disabled, sl.sysadmin, sl.securityadmin, sl.serveradmin, sl.setupadmin, sl.processadmin, sl.diskadmin, sl.dbcreator, sl.bulkadmin
+        FROM master.sys.server_principals r
+        LEFT JOIN master.sys.syslogins sl ON sl.sid = r.sid
+        WHERE r.type IN ('S','E','X','U','G');
+
+  * Перечисление баз данных
+
+          enum_db
+           USE flagDB;
+           SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = 'flagDB';
+           SELECT * FROM tb_flag;
+
+        SELECT a.name AS 'database', b.name AS 'owner', is_trustworthy_on FROM sys.databases a JOIN sys.server_principals b ON a.owner_sid = b.sid;
+
+* Перечисление пользователей (базы данных)
+  
+      USE webshop;
+        EXECUTE sp_helpuser;
+
+       use webshop
+      enum_users
+        
 ---Включить вполнени xp_cmdshell
 
 enable_xp_cmdshell
@@ -126,13 +151,8 @@ exec xp_dirtree 'c:/';
 
 ********************
    
-       enum_db
-       USE flagDB;
-       SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = 'flagDB';
-       SELECT * FROM tb_flag;
-* Проверить залогиненных пользователей
+      
 
-  enum_logins                - enum login users
 
 * Проверим, у кого есть роль sysadmin
 
