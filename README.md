@@ -83,7 +83,7 @@ mysql -u bolt_dba -p
 
 # MySqlDUMP
 
-    mysqldump -u theseus(user) -p Magic(datab)
+    mysqldump -h <hostname-ip> -u theseus(user) -p Magic(datab)
 
 
 
