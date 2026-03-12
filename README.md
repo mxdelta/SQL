@@ -257,7 +257,7 @@ mongo --port 27117 ace --eval "db.admin.find().forEach(printjson);"
 mongo --port 27117 ace --eval 'db.admin.update({"_id":ObjectId("61ce278f46e0fb0012d47ee4")},{$set:{"x_shadow":"SHA_512 Hash Generated"}})'
 
 снаружи
-
+mongo mongodb://username:password@10.129.142.102:27017
 mongo mongodb://10.129.142.102:27017
 
 show dbs;
